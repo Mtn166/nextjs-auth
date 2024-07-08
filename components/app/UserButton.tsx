@@ -1,5 +1,14 @@
 import { auth } from "@/auth";
-import { SignIn } from "./auth-components";
+import { SignIn, SignOut } from "./auth-components";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
 
 export default async function UserButton() {
   const session = await auth();
@@ -11,6 +20,31 @@ export default async function UserButton() {
       <span className="hidden text-sm sm:inline-flex">
         {session.user.email}
       </span>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative w-8 h-8 rounded-full">
+            <Avatar>
+              <AvatarImage src={session.user.image || ""} />
+              <AvatarFallback>{session.user.name}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">
+                {session.user.name}
+              </p>
+              <p className="text-xs leading-none text-muted-foreground">
+                {session.user.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuItem>
+            <SignOut />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
